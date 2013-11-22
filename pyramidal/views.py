@@ -45,7 +45,7 @@ def getAllenExperimentIds(gene_id='Fezf2'):
 	# Mouse
 	baseUrl = "http://api.brain-map.org/api/v2/data/SectionDataSet/query.json?criteria=[failed$eqfalse],products[abbreviation$eqMouse],genes[acronym$eq%s]" % gene_id
 	# DevMouse
-	#baseUrl = "http://api.brain-map.org/api/v2/data/SectionDataSet/query.json?criteria=[failed$eqfalse],products[abbreviation$eqDevMouse],genes[acronym$eq%s]" % gene_id 
+	#baseUrl = "http://api.brain-map.org/api/v2/data/SectionDataSet/query.json?criteria=[failed$eqfalse],products[abbreviation$eqDevMouse],genes[acronym$eq%s]" % gene_id
 	#print baseUrl
 	response = urllib2.urlopen(baseUrl)
 	data = json.load(response)
@@ -80,13 +80,13 @@ def geneDetail(request,gene_id):
 		'sectionData': allenSectionData,
 	}
 	return render(request,'pyramidal/geneDetail.html',context)
-	
+
 
 def isoformDetail(request,isoform_id):
 	try:
 		#get Isoform object
 		isoform = Isoform.objects.get(isoform_id=isoform_id)
-		
+
 		context = {
 			'isoform': isoform,
 		}
@@ -115,19 +115,19 @@ def normalize_query(query_string,
     ''' Splits the query string in invidual keywords, getting rid of unecessary spaces
         and grouping quoted words together.
         Example:
-        
+
         >>> normalize_query('  some random  words "with   quotes  " and   spaces')
         ['some', 'random', 'words', 'with quotes', 'and', 'spaces']
-    
+
     '''
-    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)] 
+    return [normspace(' ', (t[0] or t[1]).strip()) for t in findterms(query_string)]
 
 def get_query(query_string, search_fields):
     ''' Returns a query, that is a combination of Q objects. That combination
         aims to search keywords within a model by testing the given search fields.
-    
+
     '''
-    query = None # Query to search for every search term        
+    query = None # Query to search for every search term
     terms = normalize_query(query_string)
     for term in terms:
         or_query = None # Query to search for a given term in each field
@@ -152,9 +152,9 @@ def search(request):
     found_genes = None
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
-        
+
         entry_query = get_query(query_string, ['gene_id', 'gene_short_name',])
-        
+
         found_genes = Gene.objects.filter(entry_query).order_by('gene_id')
 
     return render(request,'pyramidal/search_results.html',

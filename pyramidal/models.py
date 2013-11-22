@@ -570,4 +570,4 @@ class ClusterAssignment(models.Model):
         managed = False
         db_table = 'clusterAssignment'
 
-        
+
